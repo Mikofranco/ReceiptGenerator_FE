@@ -1,11 +1,12 @@
-import { useState } from "react";
-import { View, Text, TextInput, Pressable, Alert } from "react-native";
+import { loginUser } from "@/services/auth";
 import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Alert, Pressable, Text, TextInput, View } from "react-native";
 // import { useAuthStore } from "../../store/auth.store";
 
 export default function LoginScreen() {
   const router = useRouter();
-//   const login = useAuthStore((state) => state.login);
+  // const login = useAuthStore((state) => state.login);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,21 +21,7 @@ export default function LoginScreen() {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:8080/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!res.ok) throw new Error("Invalid credentials");
-
-      const data = await res.json();
-
-    //   await login(data.token);
-
-      router.replace("/");
+      loginUser({ username: email, password });
     } catch (err) {
       Alert.alert("Login Failed", "Check your credentials");
       console.error(err);

@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { View, Text, TextInput, Pressable, Alert } from "react-native";
+import { registerUser } from "@/services/auth";
 import { useRouter } from "expo-router";
+import { useState } from "react";
+import { Alert, Pressable, Text, TextInput, View } from "react-native";
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -15,27 +16,10 @@ export default function RegisterScreen() {
       Alert.alert("Error", "All fields are required");
       return;
     }
-
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:8080/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          password,
-        }),
-      });
-
-      if (!res.ok) throw new Error("Registration failed");
-
-      Alert.alert("Success", "Account created successfully");
-
-      router.replace("/auth/login");
+      registerUser({ name, username: email, password });
     } catch (err) {
       Alert.alert("Error", "Could not create account");
       console.error(err);
